@@ -1,8 +1,5 @@
-import { Token, User } from "../models/index.js";
-import {
-  generateAccessToken,
-  generateRefreshToken,
-} from "../utils/generateToken.js";
+import {Token, User} from "../models/index.js";
+import {generateAccessToken, generateRefreshToken,} from "../utils/generateToken.js";
 
 // @desc Auth user & get token
 // @route POST /api/users/login
@@ -76,7 +73,6 @@ const registerUser = async (req, res, next) => {
       throw new Error("Invalid user data");
     }
   } catch (e) {
-    console.log(e);
     next(e);
   }
 };
@@ -110,48 +106,20 @@ const getUserProfile = async (req, res, next) => {
 const updateUserProfile = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.user.id);
-
+    const changed = [];
+    if (req.body.name) changed.push("name");
+    if (req.body.password) changed.push("password");
     if (user) {
       user.name = req.body.name || user.name;
-      user.email = req.body.email || user.email;
       if (req.body.password) {
         user.password = req.body.password || user.password;
       }
 
-      const updatedUser = await user.save();
+      await user.save();
       res.json({
-        id: updatedUser.id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        isAdmin: updatedUser.isAdmin,
-      });
-    } else {
-      res.status(404);
-      throw new Error("User not found");
-    }
-  } catch (e) {
-    next(e);
-  }
-};
-
-// @desc Update user
-// @route PUT /api/users/:id
-// @access Private/Admin
-const updateUser = async (req, res, next) => {
-  try {
-    const user = await User.findByPk(req.params.id);
-
-    if (user) {
-      user.name = req.body.name || user.name;
-      user.email = req.body.email || user.email;
-      user.isAdmin = req.body.isAdmin;
-
-      const updatedUser = await user.save();
-      res.json({
-        _id: updatedUser._id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        isAdmin: updatedUser.isAdmin,
+        message: "Successfully Update User",
+        changed: changed,
+        statusCode: 200,
       });
     } else {
       res.status(404);
@@ -177,7 +145,7 @@ const getUsers = async (req, res, next) => {
 // @desc Get user by ID
 // @route GET /api/users/:id
 // @access Private/admin
-const getUserByID = async (req, res) => {
+const getUserByID = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id, {
       attributes: {
@@ -199,7 +167,7 @@ const getUserByID = async (req, res) => {
 // @desc Delete User
 // @route DELETE /api/users/:id
 // @access Private/admin
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id);
     if (user) {
@@ -222,5 +190,4 @@ export {
   getUsers,
   deleteUser,
   getUserByID,
-  updateUser,
 };

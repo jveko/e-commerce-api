@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { DataTypes } from "sequelize";
+import {DataTypes, Sequelize} from "sequelize";
 
 /**
  * @param {Sequelize} sequelize
@@ -30,7 +30,7 @@ const defineUserModel = (sequelize) => {
     },
     roles: {
       type: DataTypes.ARRAY(DataTypes.ENUM("admin", "user", "super_admin")),
-      defaultValue: "user",
+      defaultValue: ["user"],
       allowNull: false,
     },
   });

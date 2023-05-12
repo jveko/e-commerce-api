@@ -1,9 +1,17 @@
-import { Product, Review } from "../models/index.js";
-import { Op } from "sequelize";
+import {Product, Review} from "../models/index.js";
+import {Op} from "sequelize";
 
 // @desc Fetch all products
 // @route GET /api/products
 // @access Public
+/**
+ * @param {Request<P, ResBody, ReqBody, ReqQuery, LocalsObj>} req
+ * @param {Response<ResBody, LocalsObj>} res
+ * @param {Sequelize} next
+ * @desc Fetch all products
+ * @route GET /api/products
+ * @access Public
+ */
 const getProducts = async (req, res, next) => {
   try {
     const { category, filter, from, to, keyword } = req.query;
@@ -42,7 +50,11 @@ const getProducts = async (req, res, next) => {
       where: where,
       order: order,
     });
-    res.json(products);
+    res.json({
+      message: "success",
+      statusCode: 200,
+      data: products,
+    });
   } catch (e) {
     next(e);
   }

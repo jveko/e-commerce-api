@@ -5,8 +5,7 @@ const notFound = (req, res, next) => {
   next(err);
 };
 
-const errorHandler = (err, req, res) => {
-  console.log(`ERROR : [${new Date().toISOString()}] ${req.method} ${req.url}`);
+const errorHandler = (err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   res.status(statusCode);
   res.json({
