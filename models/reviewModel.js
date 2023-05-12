@@ -15,16 +15,16 @@ const defineReviewModel = (sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     rating: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
     comment: {
       type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    createdById: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
   });

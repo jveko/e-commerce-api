@@ -30,9 +30,53 @@ User.hasMany(Token, {
   sourceKey: "id",
   foreignKey: "userId",
 });
+
 Token.belongsTo(User, {
   targetKey: "id",
   foreignKey: "userId",
 });
 
+User.hasMany(Product, {
+  sourceKey: "id",
+  foreignKey: "createdById",
+  as: "createdBy",
+});
+
+Product.belongsTo(User, {
+  targetKey: "id",
+  foreignKey: "createdById",
+  as: "createdBy",
+});
+
+User.hasMany(Product, {
+  sourceKey: "id",
+  foreignKey: "updatedById",
+  as: "updatedBy",
+});
+
+Product.belongsTo(User, {
+  targetKey: "id",
+  foreignKey: "updatedById",
+  as: "updatedBy",
+});
+
+Product.hasMany(Review, {
+  sourceKey: "id",
+  foreignKey: "productId",
+});
+
+Review.belongsTo(Product, {
+  targetKey: "id",
+  foreignKey: "productId",
+});
+
+User.hasMany(Review, {
+  sourceKey: "id",
+  foreignKey: "createdById",
+});
+
+Review.belongsTo(User, {
+  sourceKey: "id",
+  foreignKey: "createdById",
+});
 export default sequelize;

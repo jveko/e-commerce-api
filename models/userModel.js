@@ -28,10 +28,10 @@ const defineUserModel = (sequelize) => {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    isAdmin: {
-      type: DataTypes.BOOLEAN,
+    roles: {
+      type: DataTypes.ARRAY(DataTypes.ENUM("admin", "user", "super_admin")),
+      defaultValue: "user",
       allowNull: false,
-      defaultValue: false,
     },
   });
 

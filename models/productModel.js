@@ -50,6 +50,14 @@ const defineProductModel = (sequelize) => {
       allowNull: false,
       defaultValue: 0,
     },
+    createdById: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    updatedById: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
   });
 };
 export default defineProductModel;

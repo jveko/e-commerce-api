@@ -1,4 +1,4 @@
-import { Product } from "../models/index.js";
+import { Product, Review } from "../models/index.js";
 import { Op } from "sequelize";
 
 // @desc Fetch all products
@@ -105,7 +105,10 @@ const createProduct = async (req, res, next) => {
       countInStock: 0,
       numReviews: 0,
     });
-    res.status(201).json(product);
+    res.status(201).json({
+      message: "Successfully Created Product",
+      statusCode: 201,
+    });
   } catch (e) {
     next(e);
   }
@@ -129,8 +132,12 @@ const updateProduct = async (req, res, next) => {
         sizes: sizes,
         images: Images,
         countInStock: countInStock,
+        updatedById: req.user.id,
       });
-      res.json(updatedProduct);
+      res.json({
+        message: "Successfully Updated Product",
+        statusCode: 200,
+      });
     } else {
       res.status(404);
       throw new Error("Product Not found");
@@ -145,37 +152,36 @@ const updateProduct = async (req, res, next) => {
 // @access Private
 const createProductReview = async (req, res, next) => {
   try {
-    //
-    // const {rating, comment} = req.body;
-    // const {id} = req.params;
-    // const product = await Product.findByPk(id, {
-    //     include: [Review]
-    // });
-    // if (product) {
-    //     const alreadyReviewed = product.reviews.find(
-    //         (r) => r.user.toString() === req.user._id.toString()
-    //     );
-    //     if (alreadyReviewed) {
-    //         res.status(404);
-    //         throw new Error("Product Already Review");
-    //     }
-    //     const review = {
-    //         name: req.user.name,
-    //         rating: Number(rating),
-    //         comment,
-    //         user: req.user._id,
-    //     };
-    //     product.reviews.push(review);
-    //     product.numReviews = product.reviews.length;
-    //     product.rating =
-    //         product.reviews.reduce((acc, item) => item.rating + acc, 0) /
-    //         product.reviews.length;
-    //     await product.save();
-    //     res.status(201).json({message: "Review added"});
-    // } else {
-    //     res.status(404);
-    //     throw new Error("Product Not found");
-    // }
+    const { rating, comment } = req.body;
+    const { id } = req.params;
+    const product = await Product.findByPk(id, {
+      include: [Review],
+    });
+    if (product) {
+      const alreadyReviewed = product.reviews.find(
+        (r) => r.user.toString() === req.user._id.toString()
+      );
+      if (alreadyReviewed) {
+        res.status(404);
+        throw new Error("Product Already Review");
+      }
+      const review = {
+        name: req.user.name,
+        rating: Number(rating),
+        comment,
+        user: req.user._id,
+      };
+      product.reviews.push(review);
+      product.numReviews = product.reviews.length;
+      product.rating =
+        product.reviews.reduce((acc, item) => item.rating + acc, 0) /
+        product.reviews.length;
+      await product.save();
+      res.status(201).json({ message: "Review added" });
+    } else {
+      res.status(404);
+      throw new Error("Product Not found");
+    }
   } catch (e) {
     next(e);
   }

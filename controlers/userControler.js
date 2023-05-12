@@ -93,7 +93,7 @@ const getUserProfile = async (req, res, next) => {
         id: user.id,
         name: user.name,
         email: user.email,
-        isAdmin: user.isAdmin,
+        roles: user.roles,
       });
     } else {
       res.status(404);
@@ -137,7 +137,6 @@ const updateUserProfile = async (req, res, next) => {
 // @desc Update user
 // @route PUT /api/users/:id
 // @access Private/Admin
-
 const updateUser = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id);
@@ -174,6 +173,7 @@ const getUsers = async (req, res, next) => {
     next(e);
   }
 };
+
 // @desc Get user by ID
 // @route GET /api/users/:id
 // @access Private/admin
@@ -195,6 +195,7 @@ const getUserByID = async (req, res) => {
     next(e);
   }
 };
+
 // @desc Delete User
 // @route DELETE /api/users/:id
 // @access Private/admin

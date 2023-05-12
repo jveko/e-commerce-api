@@ -6,11 +6,11 @@ import { User, Product } from "./models/index.js";
 dotenv.config();
 export const importData = async () => {
   try {
-    const createUsers = await User.bulkCreate(users);
-    const sampleProducts = products.map((product) => {
-      return { ...product, user: createUsers[0].dataValues.id };
-    });
-    await Product.bulkCreate(sampleProducts);
+    // const createUsers = await User.bulkCreate(users);
+    // const sampleProducts = products.map((product) => {
+    //   return { ...product, user: createUsers[0].dataValues.id };
+    // });
+    // await Product.bulkCreate(sampleProducts);
   } catch (error) {
     console.log(`${error}`);
     process.exit(1);

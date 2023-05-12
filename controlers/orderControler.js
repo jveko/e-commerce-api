@@ -5,26 +5,24 @@ import Order from "../models/orderModel.js";
 // @desc Create new order
 // @route POST /api/orders
 // @access Private
-const addorderitems = asyncHandler(async (req, res) => {
-  console.log(req.user);
-
-  const {
-    orderItems,
-    shippingAddress,
-    paymentMethod,
-    itemsPrice,
-    taxPrice,
-    shippingPrice,
-    totalPrice,
-  } = req.body;
-  if (orderItems && orderItems.length === 0) {
-    res.status(400);
-    throw new Error("No order items");
-  } else {
+const createOrder = async (req, res, next) => {
+  try {
+    const {
+      orderItems,
+      shippingAddress,
+      paymentMethod,
+      itemsPrice,
+      taxPrice,
+      shippingPrice,
+      totalPrice,
+    } = req.body;
+    if (orderItems && orderItems.length === 0) {
+      res.status(400);
+      throw new Error("No order items");
+    }
     const order = new Order({
       user: req.user._id,
       orderItems,
-
       shippingAddress,
       paymentMethod,
       itemsPrice,
@@ -33,10 +31,11 @@ const addorderitems = asyncHandler(async (req, res) => {
       totalPrice,
     });
     const createdOrder = await order.save();
-
     res.status(201).json(createdOrder);
+  } catch (e) {
+    next(e);
   }
-});
+};
 // @desc get order by id
 // @route GET /api/orders/:id
 // @access Private
@@ -106,7 +105,7 @@ const GetOrders = asyncHandler(async (req, res) => {
 });
 
 export {
-  addorderitems,
+  createOrder,
   getOrderById,
   updateOrderToPaid,
   GetMyOrders,
